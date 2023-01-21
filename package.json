@@ -18,10 +18,12 @@
   },
   "homepage": "https://github.com/Waishnav/real-time-document-editor-backend#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.10.2",
     "socket.io": "^3.0.0"
   },
