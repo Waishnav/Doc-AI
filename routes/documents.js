@@ -12,7 +12,7 @@ import { isLoggedIn } from '../middleware/auth';
 router.post('/', isLoggedIn() , promiseHandler( async (res,req,next) => {
 
     try {
-        const document = await documentsController.createDocument(req.loggedInUser , req.body)
+        const document = await documentsController.createDocument(req.body.userId , req.body)
         res.status(200).json({ document });
     } catch (error) {
         res.status(500).json({ error });
@@ -21,7 +21,7 @@ router.post('/', isLoggedIn() , promiseHandler( async (res,req,next) => {
 
 router.get('/', isLoggedIn() , promiseHandler( async (res,req,next) => {
     try {
-        const documents = await documentsController.getAllDocuments(req.loggedInUser);
+        const documents = await documentsController.getAllDocuments(req.body.userId);
         res.status(200).json({ documents });
     }
     catch (error) {
