@@ -7,7 +7,7 @@ const socketEvent = require("./socket/events")
 
 const bodyParser = require('body-parser');
 const documentsRoutes = require('./routes/documents');
-
+const userRoutes = require('./routes/user');
 
 app.use(express.json())
 
@@ -41,6 +41,7 @@ app.use(bodyParser.json());
 
 // Use routes
 app.use('/documents', documentsRoutes);
+app.use('/users', userRoutes);
 
 const server = app.listen(PORT, () => {
   console.log(`Server working on port ${PORT}`);
