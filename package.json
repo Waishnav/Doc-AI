@@ -1,0 +1,29 @@
+{
+  "name": "real-time-document-editor-backend",
+  "version": "1.0.0",
+  "description": "Backend API for real time document editor app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Waishnav/real-time-document-editor-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Waishnav/real-time-document-editor-backend/issues"
+  },
+  "homepage": "https://github.com/Waishnav/real-time-document-editor-backend#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.2",
+    "socket.io": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
