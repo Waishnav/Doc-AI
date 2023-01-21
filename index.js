@@ -9,8 +9,12 @@ const PORT = 3000;
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect("mongodb+srv://mortysmith:X4dThft4RDPbFGf@cluster0.kxrxbee.mongodb.net/?retryWrites=true&w=majority", {
-  useNewUrlParser: true, useUnifiedTopology: true,
+mongoose.connect("mongodb+srv://mortysmith:X4dThft4RDPbFGf@cluster0.kxrxbee.mongodb.net/?retryWrites=true&w=majority", 
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
 }).then(() => console.log('DB Connected...')).catch((err) => console.error(err));
 
 // Enable CORS
