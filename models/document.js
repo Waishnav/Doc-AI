@@ -26,15 +26,15 @@ const documentSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    access: {
-        type: String,
-        enum: ['private', 'public'],
-        default: 'private'
-    },
-    collaborators: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-    }]
+    // access: {
+    //     type: String,
+    //     enum: ['private', 'public'],
+    //     default: 'private'
+    // },
+    // collaborators: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User',
+    // }]
 });
 
 const Document = mongoose.model('Document', documentSchema);

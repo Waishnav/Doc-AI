@@ -4,43 +4,63 @@ const Document = require('../models/document');
 
 exports.init = (server) => {
     const io = socketio(server);
+    
+    io.on("connection", socket => {
+        socket.on("get-document", async documentId => {
+          const document = async (documentId) => {
+            if (documentId == null) return
+            const document = await Document.findById(documentId)
+            if (document) return document
+            return await Document.create({ _id: documentId, content: "" })
+          }
+          socket.join(documentId)
+          socket.emit("load-document", document.data)
 
-    io.on('connection', (socket) => {
-        socket.on('join', async (documentId) => {
-            const document = await Document.findById(documentId);
-            if (!document) {
-                return socket.emit('document:not-found');
-            }
-            socket.join(documentId);
-            socket.emit('document', document);
-        });
+        socket.on("send-changes", delta => {
+          socket.broadcast.to(documentId).emit("receive-changes", delta)
+        })
 
-        socket.on('change', async (data) => {
-            const { documentId, delta } = data;
-            const document = await Document.findById(documentId);
-            if (!document) {
-                return socket.emit('document:not-found');
-            }
+        socket.on("save-document", async data => {
+          await Document.findByIdAndUpdate(documentId, { content: data })
+        })
+      })
+    })
+    // io.on('connection', (socket) => {
+    //     socket.on('join', async (documentId) => {
+    //         const document = await Document.findById(documentId);
+    //         if (!document) {
+    //             return socket.emit('document:not-found');
+    //         }
+    //         socket.join(documentId);
+    //         socket.emit('document', document.content);
+    //     });
 
-            // Save the changes as a new revision
-            // const revision = new Revision({
-            //     document: document._id,
-            //     content: document.content,
-            //     delta: delta
-            // });
-            // await revision.save();
+    //     socket.on('change', async (data) => {
+    //         const { documentId, delta } = data;
+    //         const document = await Document.findById(documentId);
+    //         if (!document) {
+    //             return socket.emit('document:not-found');
+    //         }
 
-            // Update the document content
-            document.content = delta;
-            document.updatedAt = Date.now();
-            await document.save();
+    //         // Save the changes as a new revision
+    //         // const revision = new Revision({
+    //         //     document: document._id,
+    //         //     content: document.content,
+    //         //     delta: delta
+    //         // });
+    //         // await revision.save();
 
-            // Emit the changes to all users connected to the document
-            io.to(documentId).emit('change', delta);
-        });
+    //         // Update the document content
+    //         document.content = delta;
+    //         document.updatedAt = Date.now();
+    //         await document.save();
 
-        socket.on('disconnect', () => {
-            console.log('user disconnected');
-        });
-    });
+    //         // Emit the changes to all users connected to the document
+    //         io.to(documentId).emit('change', delta);
+    //     });
+
+    //     socket.on('disconnect', () => {
+    //         console.log('user disconnected');
+    //     });
+    // });
 };
