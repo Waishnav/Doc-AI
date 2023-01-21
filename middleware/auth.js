@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-exports.verifyToken = async (req, res, next) => {
+exports.isLoggedIn = async (req, res, next) => {
     try {
         let token = req.header("Authorization");
         if (!token) {

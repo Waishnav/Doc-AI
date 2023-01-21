@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const documentsController = require('../controllers/documents');
+import { isLoggedIn } from '../middleware/auth';
 
 // router.post('/', documentsController.createDocument);
 // router.get('/', documentsController.getAllDocuments);

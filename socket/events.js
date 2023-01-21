@@ -1,5 +1,6 @@
 const socketio = require('socket.io');
 const Document = require('../models/document');
+const docController = require("../controllers/documents")
 // const Revision = require('../models/revision');
 
 exports.init = () => {
@@ -14,10 +15,15 @@ exports.init = () => {
     socket.on("get-document", async documentId => {
       const document = async (documentId) => {
         if (documentId == null) return
-        const document = await Document.findById(documentId)
+        const document = await docController.getDocumentByUUID(documentId)
         if (document) return document
-        return await Document.create({ _id: documentId, content: "" })
+        const content = {
+          title: "Untitled",
+          content: "",
+        }
+        return await docController.createDocument(documentId, content) ;
       }
+
       socket.join(documentId)
       socket.emit("load-document", document.data)
 
@@ -26,7 +32,7 @@ exports.init = () => {
       })
 
       socket.on("save-document", async data => {
-        await Document.findByIdAndUpdate(documentId, { content: data })
+        await docController.updateDocument(documentId, data) ;
       })
     })
   })
