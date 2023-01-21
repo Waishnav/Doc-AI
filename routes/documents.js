@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const documentsController = require('../controllers/documents');
-import { isLoggedIn } from '../middleware/auth';
-
+const auth = require('../middleware/auth');
+const promiseHandler= fn => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 // router.post('/', documentsController.createDocument);
 // router.get('/', documentsController.getAllDocuments);
 // router.get('/:uuid', documentsController.getDocumentByUUID);
 // router.put('/:uuid', documentsController.updateDocument);
 // router.delete('/:uuid', documentsController.deleteDocument);
 
-router.post('/', isLoggedIn() , promiseHandler( async (res,req,next) => {
+router.post('/', auth.isLoggedIn, promiseHandler( async (req,res,next) => {
 
     try {
         const document = await documentsController.createDocument(req.body.userId , req.body)
@@ -19,7 +21,7 @@ router.post('/', isLoggedIn() , promiseHandler( async (res,req,next) => {
     }
 }));
 
-router.get('/', isLoggedIn() , promiseHandler( async (res,req,next) => {
+router.get('/', auth.isLoggedIn , promiseHandler( async (req,res,nex) => {
     try {
         const documents = await documentsController.getAllDocuments(req.body.userId);
         res.status(200).json({ documents });
@@ -29,7 +31,7 @@ router.get('/', isLoggedIn() , promiseHandler( async (res,req,next) => {
     }
 }));
 
-router.get('/:uuid', isLoggedIn() , promiseHandler( async (res,req,next) => {
+router.get('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,next) => {
     try {
         const { uuid } = req.params;
         const document = await documentsController.getDocumentByUUID(uuid);
@@ -42,7 +44,7 @@ router.get('/:uuid', isLoggedIn() , promiseHandler( async (res,req,next) => {
     }
 }));
 
-router.put('/:uuid', isLoggedIn() , promiseHandler( async (res,req,next) => {
+router.put('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,nex) => {
     try {
         const { uuid } = req.params;
         const document = await documentsController.updateDocument(uuid, req.body);
@@ -55,7 +57,7 @@ router.put('/:uuid', isLoggedIn() , promiseHandler( async (res,req,next) => {
     }
 }));
 
-router.delete('/:uuid', isLoggedIn() , promiseHandler( async (res,req,next) => {
+router.delete('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,nex) => {
     try {
         const { uuid } = req.params;
         const document = await documentsController.deleteDocument(uuid);
