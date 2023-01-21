@@ -1,5 +1,3 @@
-import { Document } from 'mongoose';
-
 const Document = require('../models/document');
 // const User = require('../models/user');
 
@@ -15,7 +13,7 @@ const Document = require('../models/document');
 //     }
 // };
 
-export const createDocument = async (user, content) => {
+exports.createDocument = async (user, content) => {
     try {
         const title = content.title;
         const content = content.content;
@@ -39,7 +37,7 @@ export const createDocument = async (user, content) => {
 // };
 
 
-export const getAllDocuments = async (user) => {
+exports.getAllDocuments = async (user) => {
     try {
         const documents = await Document.find({ owner: user.user._id });
         return documents;
@@ -61,7 +59,7 @@ export const getAllDocuments = async (user) => {
 //     }
 // };
 
-export const getDocumentByUUID = async (uuid) => {
+exports.getDocumentByUUID = async (uuid) => {
     try {
         const document = await Document .findOne({ _id : uuid });
         if (!document) {
@@ -94,7 +92,7 @@ export const getDocumentByUUID = async (uuid) => {
 //     }
 // };
 
-export const updateDocument = async (uuid, content) => {
+exports.updateDocument = async (uuid, content) => {
     try {
         const title = content.title;
         const content = content.content;
@@ -127,7 +125,7 @@ export const updateDocument = async (uuid, content) => {
 //     }
 // };
 
-export const deleteDocument = async (uuid) => {
+exports.deleteDocument = async (uuid) => {
     try {
         const document = await Document.findOne({_id:uuid});
         if (!document) {
@@ -165,7 +163,7 @@ export const deleteDocument = async (uuid) => {
 // };
 
 
-export const updateTitle = async (uuid, title) => {
+exports.updateTitle = async (uuid, title) => {
     try {
         const document = await Document.findOne({ _id: uuid });
         if (!document) {
