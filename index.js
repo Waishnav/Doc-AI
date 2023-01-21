@@ -9,23 +9,28 @@ const bodyParser = require('body-parser');
 const documentsRoutes = require('./routes/documents');
 const userRoutes = require('./routes/user');
 
+const PORT = 3001;
+app.use(cors({
+  credentials: true,
+  origin: '*'
+}));
+
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  if (req.method === 'OPTIONS') {
+      res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+      return res.status(200).json({});
+  }
+  next();
+});
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
-
-
-
-const PORT = 3001;
-
-app.use(cors({
-  credentials: true,
-  origin: '*',
-  headers: 'origin'
-}));
-
-
 mongoose.connect("mongodb+srv://mortysmith:X4dThft4RDPbFGf@cluster0.kxrxbee.mongodb.net/?retryWrites=true&w=majority", 
   {
     useNewUrlParser: true,
