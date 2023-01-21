@@ -34,6 +34,15 @@ exports.init = () => {
       socket.on("save-document", async data => {
         await docController.updateDocument(documentId, data) ;
       })
+
+      socket.on("update-title", ({docID, newTitle}) => {
+        docController.updateTitle(docID, newTitle).then(() => {
+          io.to(docID).emit("title-updated", newTitle);
+        }).catch((err) => {
+          console.log("unable to update title",err) ;
+        });
+      });
+
     })
   })
   // io.on('connection', (socket) => {

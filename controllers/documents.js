@@ -164,25 +164,19 @@ export const deleteDocument = async (uuid) => {
 //     }
 // };
 
-// exports.removeCollaborator = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const { email } = req.body;
-//         const document = await Document.findOne({ _id: id, owner: req.user._id });
-//         if (!document) {
-//             return res.status(404).json({ error: 'Document not found' });
-//         }
-//         const collaborator = await User.findOne({ email });
-//         if (!collaborator) {
-//             return res.status(404).json({ error: 'Collaborator not found' });
-//         }
-//         if (!document.collaborators.includes(collaborator._id)) {
-//             return res.status(409).json({ error: 'Collaborator not added to the document' });
-//         }
-//         document.collaborators.pull(collaborator._id);
-//         await document.save();
-//         res.status(200).json({ message: 'Collaborator removed successfully' });
-//     } catch (error) {
-//         res.status(500).json({ error });
-//     }
-// };
+
+export const updateTitle = async (uuid, title) => {
+    try {
+        const document = await Document.findOne({ _id: uuid });
+        if (!document) {
+            console.log("document not found while updating")
+            return ;
+        }
+        document.title = title;
+        document.updatedAt = Date.now();
+        await document.save();
+        return document;
+    } catch (error) {
+        console.log("error in updating doc title", error)
+    }
+}
