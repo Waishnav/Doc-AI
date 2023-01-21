@@ -13,12 +13,12 @@ const Document = require('../models/document');
 //     }
 // };
 
-exports.createDocument = async (user, content) => {
+exports.createDocument = async  (user, content) => {
     try {
         const title = content.title;
-        const content = content.content;
+        const docContent = content.content;
         const owner = user.user._id;
-        const document = new Document({ title, content, owner });
+        const document = new Document({ title, docContent, owner });
         await document.save();
     } catch (error) {
         console.log("error in doc creation", error)

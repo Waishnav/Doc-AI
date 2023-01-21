@@ -3,45 +3,47 @@ const User = require('../models/users');
 exports.register = async (user) => {
     try {
         if (!user) {
-            return res.status(400).json({ error: 'Please provide all required fields' });
+            return { error: 'Please provide all required fields', status: 400}
         }
         const email = user.email;
         const password = user.password;
         const name = user.name;
 
-        const newUser = await User.findOne({ email });
-        if (newUser) {
-            return res.status(400).json({ error: 'User already exists'});
+        const exitstingUser = await User.findOne({ email });
+        if (exitstingUser) {
+            return { error: 'User already exists', status: 400 };
         }
-        const user = new User({ name, email, password });
+        const newUser = new User({ name, email, password });
         await user.save();
-        return user;
+        return newUser;
     }
     catch (error) {
         console.log("error in user registration", error)
+        return { error: 'User already exists', status: 500 };
     }
 }
 
 exports.login = async (user) => {
     try {
         if (!user) {
-            return res.status(400).json({ error: 'Please provide all required fields' });
+            return { error: 'Please provide all required fields', status: 400 };
         }
         const email = user.email;
         const password = user.password;
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ error: 'Invalid credentials' });
+        const loggedinUser = await User.findOne({ email });
+        if (!loggedinUser) {
+            return { error: 'User not found on login', status: 400 };
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'credentials do not match' });
+            return { error: 'Credentials do not match', status: 400 };
         }
-        return user;
+        return loggedinUser;
     }
     catch (error) {
         console.log("error in user login", error)
+        return { error: 'User not found on login', status: 500 };
     }
 }
 
@@ -51,5 +53,6 @@ exports.getAllUsers = async () => {
         return users;
     } catch (error) {
         console.log("error in finding users", error)
+        return { error: 'User not found on login', status: 500 };
     }
 }
