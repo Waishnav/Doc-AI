@@ -1,0 +1,108 @@
+.login {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: white;
+
+    .login_container {
+        min-height: 550px;
+        width: fit-content;
+        text-align: center;
+        border-radius: 20px;
+        padding: 1rem;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+    
+
+    form {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+
+        h1{
+            margin: 1.5rem;
+        }
+        .input_box {
+            position: relative;
+            width: 30vw;
+
+            input {
+                width: 100%;
+                margin: 1rem 0;
+                padding: 1.5rem 1rem 1.5rem 3.3rem;
+                border-radius: 0.5rem;
+                background: transparent;
+                border: 2px solid var(--color-bg);
+                color: var(--color-primary);
+                font-size: 1.3rem;
+                transition: 0.3s;
+                outline: none;
+
+                &:is(input:focus, input:valid)~label {
+                    background: white;
+                    border-left: 1px solid var(--color-primary);
+                    border-right: 1px solid var(--color-primary);
+                    color: var(--color-primary);
+                    translate: -40px -35px;
+                    scale: 0.85;
+                }
+
+                &:focus,
+                &:valid {
+                    border: 2px solid var(--color-primary);
+                }
+            }
+
+            .input_icons {
+                position: absolute;
+                padding: 0 5px;
+                left: 10px;
+                top: 33%;
+                font-size: 2.3rem;
+                transition: .3s ease;
+                pointer-events: none;
+            }
+
+            .label-name {
+                position: absolute;
+                padding: 0 5px;
+                left: 50px;
+                top: 40px;
+                font-size: 1.5rem;
+                transition: .3s ease;
+                pointer-events: none;
+            }
+
+
+        }
+
+        .btn {
+            display: inline-block;
+            position: relative;
+            color: white;
+            background: var(--color-bg);
+            font-weight: 500;
+            font-size: 20px;
+            padding: 15px 25px;
+            margin: 20px;
+            border: 2px solid white;
+            border-radius: 10px;
+            z-index: 1;
+            overflow: hidden;
+            transition: 0.5s;
+
+            &:hover {
+                color: #19aae6;
+                background: white;
+                border: 2px solid #19aae6;
+
+            }
+
+        }
+    }
+}

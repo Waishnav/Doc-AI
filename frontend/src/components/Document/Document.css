@@ -1,0 +1,71 @@
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 4rem;
+  font-size: 36px;
+}
+
+.flex {
+  display: flex;
+  gap: 1rem;
+}
+
+#header input {
+  padding: 0.2rem 0.8rem ;
+  font-size: 20px;
+  border-radius: 4px;
+  background: white;
+  border: 1px solid lightgrey;
+}
+#header input:focus {
+  border: 2px solid #643cb4;
+  background: white;
+}
+#header img {
+  width: 48px;
+  height: auto;
+}
+#header button {
+  position: relative;
+  top: -4px;
+  background-color: #643cb4 ;
+  color: white;
+  padding: 0.7rem 1.1rem;
+  font-size: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.documents{
+  display: flex;
+  justify-content: center;
+  gap: 4rem
+}
+
+#container .ql-editor {
+  width: 60rem;
+  height: 100vh;
+  padding: 3rem;
+  margin: 2rem;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+#container .ql-container.ql-snow {
+  border: none;
+  display: flex;
+  justify-content: center;
+}
+
+#container .ql-toolbar.ql-snow {
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: transparent;
+  border: none;
+  /* width: 100vw; */
+  transform: scale(1.3);
+}
