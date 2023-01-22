@@ -1,14 +1,36 @@
 const express = require('express');
+const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const socketEvent = require("./socket/events")
+
+
 const bodyParser = require('body-parser');
-const socketEvents = require('./socket/events');
 const documentsRoutes = require('./routes/documents');
+const userRoutes = require('./routes/user');
 
-const PORT = 3000;
-const app = express();
+const PORT = 3001;
+app.use(cors({
+  credentials: true,
+  origin: '*'
+}));
 
-// Connect to MongoDB
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  if (req.method === 'OPTIONS') {
+      res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+      return res.status(200).json({});
+  }
+  next();
+});
+
+app.use(express.json())
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
 mongoose.connect("mongodb+srv://mortysmith:X4dThft4RDPbFGf@cluster0.kxrxbee.mongodb.net/?retryWrites=true&w=majority", 
   {
     useNewUrlParser: true,
@@ -18,15 +40,16 @@ mongoose.connect("mongodb+srv://mortysmith:X4dThft4RDPbFGf@cluster0.kxrxbee.mong
 }).then(() => console.log('DB Connected...')).catch((err) => console.error(err));
 
 // Enable CORS
-app.use(cors());
+console.log("hdfds")
 
 app.use(bodyParser.json());
 
 // Use routes
 app.use('/documents', documentsRoutes);
+app.use('/users', userRoutes);
 
-// Initialize socket.io
 const server = app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
-socketEvents.init(server);
+  console.log(`Server working on port ${PORT}`);
+})
+
+socketEvent.init();
