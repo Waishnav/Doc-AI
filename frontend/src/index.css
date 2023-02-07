@@ -31,3 +31,14 @@ code {
   --transition: all 400ms ease;
 
 }
+
+.border-div {
+  border: 2px solid #C4C4C4;
+  border-radius: 4px;
+  width: 20rem;
+  padding: 0.8rem;
+  display: flex;
+  gap: 2rem;
+  font-size: 14px;
+  justify-content: center;
+}

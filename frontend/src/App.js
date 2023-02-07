@@ -1,65 +1,34 @@
 import './App.css';
-import Registration from "./components/Registration/Registration";
-import Login from "./components/Login/Login"
-import DocumentEditor from "./components/Document/Document.js"
-import Dashboard from "./components/Dashboard/Dashboard"
-import Home from "./components/Home/Home"
-import { useAuth } from "./context/auth";
-
+import Registration from "./pages/Registration/Registration";
+import Login from "./pages/Login/Login"
+import DocumentEditor from "./components/DocumentEditor/DocumentEditor"
+import Dashboard from "./pages/Dashboard/Dashboard"
+import Home from "./pages/Home/Home.jsx" 
+import DocumentPage from './pages/DocumentPage/DocumentPage';
+import PrivateRoutes from './PrivateRoutes';
 import {
-  BrowserRouter as Router,
-  Switch,
+  BrowserRouter,
+  Routes,
   Route,
-  Redirect,
 } from "react-router-dom"
-import { v4 as uuidV4 } from "uuid"
+// import {Fragment} from 'react';
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/login">
-          <Login />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Registration />} />
+        <Route element={<PrivateRoutes/>}>
+          <Route element={<Dashboard/>} path="/dashboard" exact></Route>
+          <Route element={<DocumentEditor/>} path="/documents/:id"></Route>
+          <Route element={<DocumentPage/>} path="/documents" exact></Route>
         </Route>
-        <Route path="/register">
-          <Registration />
-        </Route>
-        <Route path="/dashboard">
-          <Dashboard />
-        </Route>
-        <Route path="/documents" exact>
-          <Redirect to={`/documents/${uuidV4()}`} />
-        </Route>
-        <Route path="/documents/:id">
-          <DocumentEditor />
-        </Route>
-        <Route path="/">
-          <Home/>
-        </Route>
-      </Switch>
-    </Router>
+        <Route path="/" element={<Home />} />
+      </Routes> 
+    </BrowserRouter>
   );
 }
 
-function PrivateRoute({ children, ...rest }) {
-  const { user } = useAuth();
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        user ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/dashboard",
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
-  );
-}
 
 export default App;

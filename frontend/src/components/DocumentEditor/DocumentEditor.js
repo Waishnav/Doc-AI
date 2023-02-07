@@ -1,28 +1,28 @@
-import "./Document.css";
+import "./DocumentEditor.css";
 import { useEffect, useCallback, useState } from "react";
 import Quill from "quill";
 import { io } from "socket.io-client";
 import "quill/dist/quill.snow.css";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useParams, Link } from "react-router-dom";
 import OpenAi from "../openAi/openAi";
-import Logo from "../../Assets/LOGO.png"
+import Logo from "../../Assets/LOGO.png";
 
 const OPTIONS = [
+  // ... other options
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ font: [] }],
+
   [{ list: "ordered" }, { list: "bullet" }],
   ["bold", "italic", "underline"],
   [{ color: [] }, { background: [] }],
   [{ script: "sub" }, { script: "super" }],
   [{ align: [] }],
   ["blockquote", "code-block"],
+  // [{ 'customSize': { label: 'Custom Size' } }],
   ["clean"],
 ];
 
 function DocumentEditor() {
-  const [count, setCount] = useState(0);
-  const [openAiResponse, setOpenAiResponse] = useState("");
   const [title, setTitle] = useState("Untitled Document");
   const [socket, setSocket] = useState();
   const [quill, setQuill] = useState();
@@ -41,7 +41,7 @@ function DocumentEditor() {
 
   function handleTitleChange(newTitle) {
     setTitle(newTitle);
-    socket.emit("update-title", { docID, newTitle });
+    socket.emit("update-title", { docID, title });
   }
 
   const wrapperRef = useCallback((wrapper) => {
@@ -57,12 +57,19 @@ function DocumentEditor() {
       },
     });
     q.disable();
-    q.setText("Loading...");
+    q.setText("Loading the document...");
     setQuill(q);
   }, []);
 
+  
   useEffect(() => {
-    const s = io("http://localhost:5000");
+    const s = io("http://localhost:8000", {
+      origin: "http://localhost:3000/",
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+      },
+    });
+
     setSocket(s);
     return () => {
       s.disconnect();
@@ -115,73 +122,26 @@ function DocumentEditor() {
   // useEffect(() => {
   //   if (quill == null) return;
 
-  //   quill.on("text-change", async (delta) => {
-  //       console.log(delta, count)
-  //       setCount(count + 1)
-  //       if (count == 50) {
-  //         const contents = quill.getContents();
-  //         if (contents.ops.length === 0) return;
-  //         const lastLine = contents.ops[contents.ops.length - 1];
-  //         let prompt
-  //         if (lastLine.insert.indexOf("//") === 0) {
-  //           prompt = lastLine.insert.slice(2);
-  //         }
-  //         console.log(prompt);
-  //         const client = axios.create({
-  //         headers: {
-  //           Authorization:
-  //             "Bearer " + "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",
-  //           },
-  //         });
-  //       const params = {
-  //         prompt: prompt,
-  //         max_tokens: 500,
-  //         temperature: 1,
-  //         n: 1,
-  //       };
-  //       client
-  //       .post(
-  //         "https://api.openai.com/v1/engines/text-davinci-003/completions",
-  //         params
-  //       ).then((res) => {
-  //           console.log(res.data.choices[0].text)
-  //           setOpenAiResponse(res.data.choices[0].text);
-  //           // console.log(openAiResponse)
-  //           // const delta = quill.clipboard.convert(openAiResponse)
-  //           const cursorPosition = quill.getSelection().index;
-  //           console.log(cursorPosition)
-  //           // quill.insertText(cursorPosition, '\n', {
-  //             // 'italic': true
-  //           // });
-  //           // quill.insertText(cursorPosition, String(openAiResponse), {
-  //           //   'italic': true
-  //           // });
-  //           console.log(openAiResponse)
+  //   // Add click event handler for customSize button
+  //   quill.getModule("toolbar").addHandler("customSize", () => {
+  //     const size = quill.getSelection().getBounds()
+  //       ? quill.getSelection().getBounds().height
+  //       : 16;
+  //     const input = prompt("Custom font size (1-7):", size);
 
-  //           const editor = document.querySelector(".ql-editor")
-  //           const para = document.createElement("p");
-  //           para.innerText = openAiResponse;
-
-  //           editor.appendChild(para)
-
-  //           // quill.setText(`{openAiResponse}\n`);
-  //           // quill.clipboard.dangerouslyPasteHTML(openAiResponse);
-  //         })
-  //         .catch((err) => {
-  //           console.error(err);
-  //         });
-
-  //       }
-  //       // if (source !== "user") return
-  //        // OpenAI code here
+  //     if (input) {
+  //       quill.format("size", input + "px");
+  //     }
   //   });
-  // }, [quill, count]);
+  // }, [quill]);
 
   return (
     <div>
       <div id="header">
         <div className="flex">
-          <img src={Logo} alt="Logo" />
+          <Link to ="/">
+            <img src={Logo} alt="Logo" />
+          </Link>
           <input
             id="text"
             type="text"

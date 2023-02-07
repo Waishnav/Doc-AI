@@ -1,77 +1,79 @@
 import "./registration.scss";
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { MdOutlineMailOutline } from "react-icons/md";
+
 function Registeration() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const { data } = await axios.post("http://localhost:3001/users/register", { name, email, password });
+      await axios.post("http://localhost:8000/users/register", { name, email, password });
       setError("");
-      history.push("/login");
+      navigate("/login");
     } catch (err) {
       setError(err.response.data.message);
     } finally {
       setIsLoading(false);
     }
   };
-  // if (isLoggedIn) {
-  //   return <Redirect to='/login' />
-  // }
 
   return (
-    <div className="registration">
-      <div className="registration_container">
         <form onSubmit={handleSubmit}>
-
-          <h1>Create Account</h1>
-          <div className="input_box">
+          <h2>Register and Inprove your Workflow</h2>
+          <div className="input-div">
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              placeholder="Name"
             />
-            <label htmlFor="name" className="label-name">Name</label>
-            <MdOutlineMailOutline className="input_icons" />
+            {/* <label htmlFor="email" className="">Email Address</label> */}
           </div>
-          <div className="input_box">
+          <div className="input-div">
             <input
               type="email"
+              id="email"
+              name="email"
               value={email}
+              placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <label htmlFor="email" className="label-name">Email Address</label>
-            <MdOutlineMailOutline className="input_icons" />
+            {/* <MdOutlineMailOutline className="input_icons" /> */}
           </div>
-          <div className="input_box">
+
+          <div className="input-div">
+            {/* <label htmlFor="password" className="">Password</label> */}
             <input
               type="password"
+              id="password"
               value={password}
+              placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <label htmlFor="password" className="label-name">Email Address</label>
-            <MdOutlineMailOutline className="input_icons" />
+            {/* <BsKey className="input_icons" /> */}
           </div>
-
-          {error && <p>{error}</p>}
-          <button type="submit" disabled={isLoading} className="inputbox btn">
-            Register
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <button type="submit" disabled={isLoading} className="btn">
+            {isLoading ? "Loading..." : "Sign Up"}
           </button>
+          <div className="border-div">
+            <span>Already User of DocAI?</span> 
+            <span> 
+                <Link to ="/login">Sign In</Link>
+            </span> 
+          </div>
         </form>
-      </div>
-    </div>
   );
 }
 

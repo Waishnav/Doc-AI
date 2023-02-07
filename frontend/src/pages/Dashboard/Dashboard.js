@@ -1,21 +1,19 @@
 import "./Dashboard.css"
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/auth.js";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../../api"
 
 function Dashboard() {
-  const { user } = useAuth();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [documents, setDocuments] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://localhost:3001/documents", {
-          params: {
-            userId: user.id,
-          },
+        const response = await api.get("/documents", {
+          // params: {
+          //   userId: user.id,
+          // },
         });
         setDocuments(response.data);
       } catch (error) {
@@ -23,14 +21,14 @@ function Dashboard() {
       }
     };
     fetchData();
-  }, [user]);
+  });
 
   const handleCreateNewDocument = async () => {
     try {
       // const response = await axios.post("https://localhost:3001/documents/create", {
       //   userId: user.id,
       // });
-      history.push(`/documents/`);
+      navigate("/documents");
     } catch (error) {
       console.log(error);
     }
