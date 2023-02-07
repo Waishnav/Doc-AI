@@ -1,20 +1,22 @@
+require('dotenv').config()
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require("http");
 const socketEvent = require("./socket/events")
-
 
 const bodyParser = require('body-parser');
 const documentsRoutes = require('./routes/documents');
 const userRoutes = require('./routes/user');
 
-const PORT = 3001;
+const app = express();
 app.use(cors({
-  credentials: true,
-  origin: '*'
+  origin: "*"
 }));
 
+const server = http.createServer(app)
+server.listen(8000, () => console.log('Server running on port 8000'));
+socketEvent.init(server);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -27,11 +29,10 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json())
-
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
-mongoose.connect("mongodb+srv://mortysmith:X4dThft4RDPbFGf@cluster0.kxrxbee.mongodb.net/?retryWrites=true&w=majority", 
+mongoose.connect(process.env.MONGO_DATABASE_DEV, 
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -39,17 +40,9 @@ mongoose.connect("mongodb+srv://mortysmith:X4dThft4RDPbFGf@cluster0.kxrxbee.mong
     useCreateIndex: true,
 }).then(() => console.log('DB Connected...')).catch((err) => console.error(err));
 
-// Enable CORS
-console.log("hdfds")
-
 app.use(bodyParser.json());
 
 // Use routes
 app.use('/documents', documentsRoutes);
 app.use('/users', userRoutes);
 
-const server = app.listen(PORT, () => {
-  console.log(`Server working on port ${PORT}`);
-})
-
-socketEvent.init();

@@ -19,6 +19,7 @@ exports.createDocument = async  (user, content) => {
         const docContent = content.content;
         const owner = user.user._id;
         const document = new Document({ title, docContent, owner });
+        console.log(document)
         await document.save();
     } catch (error) {
         console.log("error in doc creation", error)

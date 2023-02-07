@@ -6,9 +6,9 @@ exports.register = async (user) => {
         if (!user) {
             return { error: 'Please provide all required fields', status: 400}
         }
+        const name = user.name;
         const email = user.email;
         const password = user.password;
-        const name = user.name;
 
         const exitstingUser = await User.findOne({ email });
         if (exitstingUser) {
@@ -36,7 +36,8 @@ exports.login = async (user) => {
         if (!loggedinUser) {
             return { error: 'User not found on login', status: 400 };
         }
-        const isMatch = await bcrypt.compare(password, user.password);
+        // console.log(loggedinUser)
+        const isMatch = (password == loggedinUser.password)
         if (!isMatch) {
             return { error: 'Credentials do not match', status: 400 };
         }

@@ -1,18 +1,19 @@
-const socketio = require('socket.io');
+const { Server } = require("socket.io");
 const Document = require('../models/document');
 const docController = require("../controllers/documents")
 // const Revision = require('../models/revision');
+//
 
-exports.init = () => {
-  const io = require("socket.io")(5000, {
+exports.init = (server) => {
+  const io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000",
-      methods: ["GET", "POST"],
+      origin: "*",
+      // methods: ["GET", "POST"],
     },
-  })
+  });
 
-  io.on("connection", socket => {
-    socket.on("get-document", async documentId => {
+  io.on("connection", (server) => {
+    server.on("get-document", async documentId => {
       const document = async (documentId) => {
         if (documentId == null) return
         const document = await docController.getDocumentByUUID(documentId)
@@ -24,27 +25,26 @@ exports.init = () => {
         return await docController.createDocument(documentId, content) ;
       }
 
-      socket.join(documentId)
-      socket.emit("load-document", document.data)
+      server.join(documentId)
+      server.emit("load-document", document.data)
 
-      socket.on("send-changes", delta => {
-        socket.broadcast.to(documentId).emit("receive-changes", delta)
+      server.on("send-changes", delta => { server.broadcast.to(documentId).emit("receive-changes", delta)
       })
 
-      socket.on("save-document", async data => {
+      server.on("save-document", async data => {
         await docController.updateDocument(documentId, data) ;
       })
 
-      socket.on("update-title", ({docID, newTitle}) => {
-        docController.updateTitle(docID, newTitle).then(() => {
+      server.on("update-title", async ({docID, newTitle}) => {
+        await docController.updateTitle(docID, newTitle).then(() => {
           io.to(docID).emit("title-updated", newTitle);
         }).catch((err) => {
           console.log("unable to update title",err) ;
         });
       });
-
     })
   })
+
   // io.on('connection', (socket) => {
   //     socket.on('join', async (documentId) => {
   //         const document = await Document.findById(documentId);

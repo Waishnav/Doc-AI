@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const documentsController = require('../controllers/documents');
 const auth = require('../middleware/auth');
+
 const promiseHandler= fn => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
@@ -12,18 +13,17 @@ const promiseHandler= fn => (req, res, next) => {
 // router.delete('/:uuid', documentsController.deleteDocument);
 
 router.post('/', auth.isLoggedIn, promiseHandler( async (req,res,next) => {
-
     try {
-        const document = await documentsController.createDocument(req.body.userId , req.body)
-        res.status(200).json({ document });
+      const document = await documentsController.createDocument(req.body.userId , req.body)
+      res.status(200).json({ document });
     } catch (error) {
-        res.status(500).json({ error });
+      res.status(500).json({ error });
     }
 }));
 
-router.get('/', auth.isLoggedIn , promiseHandler( async (req,res,nex) => {
+router.get('/', auth.isLoggedIn, promiseHandler( async (req,res,nex) => {
     try {
-        const documents = await documentsController.getAllDocuments(req.body.userId);
+        const documents = await documentsController.getAllDocuments(req.userId);
         res.status(200).json({ documents });
     }
     catch (error) {
