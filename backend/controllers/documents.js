@@ -13,20 +13,17 @@ const Document = require('../models/document');
 //     }
 // };
 
-exports.createDocument = async  (user, content) => {
+exports.createDocument = async  (userId) => {
     try {
-        const title = content.title;
-        const docContent = content.content;
-        const owner = user.user._id;
-        const document = new Document({ title, docContent, owner });
-        console.log(document)
+        const title = "Untitled Document";
+        const owner = userId;
+        const document = new Document({ title, owner });
         await document.save();
+        return document;
     } catch (error) {
-        console.log("error in doc creation", error)
+        console.log("Error in doc creation", error)
     }
-    return document;
 }
-
 
 // exports.getAllDocuments = async (req, res) => {
 //     try {
@@ -38,9 +35,9 @@ exports.createDocument = async  (user, content) => {
 // };
 
 
-exports.getAllDocuments = async (user) => {
+exports.getAllDocuments = async (userId) => {
     try {
-        const documents = await Document.find({ owner: user.user._id });
+        const documents = await Document.find({ owner: userId });
         return documents;
     } catch (error) {
         console.log("error in finding doc", error)
@@ -62,14 +59,14 @@ exports.getAllDocuments = async (user) => {
 
 exports.getDocumentByUUID = async (uuid) => {
     try {
-        const document = await Document .findOne({ _id : uuid });
+        const document = await Document.findOne({ _id : uuid });
         if (!document) {
-            console.log("document not found")
+            console.log("Document not found")
             return ;
         }
         return document;
     } catch (error) {
-        console.log("error in finding doc", error)
+        console.log("Error in finding doc", error)
     }
 }
 
@@ -99,7 +96,7 @@ exports.updateDocument = async (uuid, content) => {
         const content = content.content;
         const document = await Document.findOne({ _id: uuid });
         if (!document) {
-            console.log("document not found while updating")
+            console.log("Document not found while updating")
             return ;
         }
         document.title = title;
@@ -108,10 +105,21 @@ exports.updateDocument = async (uuid, content) => {
         await document.save();
         return document;
     } catch (error) {
-        console.log("error in finding doc", error)
+        console.log("Error in finding doc", error)
     }
 }
 
+exports.deleteDocument = async  (userId, docId) => {
+    try {
+        const document = await Document.findOne({ _id: id, owner: req.user._id });
+        if (!document) {
+            console.log(`Document deleted of docId ${docId}`)
+        }
+        await document.remove();
+    } catch (error) {
+        console.log("Error in doc creation", error)
+    }
+}
 // exports.deleteDocument = async (req, res) => {
 //     try {
 //         const { id } = req.params;
@@ -128,7 +136,7 @@ exports.updateDocument = async (uuid, content) => {
 
 exports.deleteDocument = async (uuid) => {
     try {
-        const document = await Document.findOne({_id:uuid});
+        const document = await Document.findOne({_id: uuid});
         if (!document) {
             return res.status(404).json({ error: 'While deleting, Document not found' });
         }
@@ -177,5 +185,21 @@ exports.updateTitle = async (uuid, title) => {
         return document;
     } catch (error) {
         console.log("error in updating doc title", error)
+    }
+}
+
+exports.isDocumentExist = async (uuid) => {
+    try {
+        if (uuid.length != 24) {
+          return false
+        }
+        const document = await Document.findOne({ _id: uuid });
+        if (!document) {
+            console.log("document not found")
+            return false;
+        }
+        return true
+    } catch (error) {
+        console.log("Error in finding document from database", error)
     }
 }

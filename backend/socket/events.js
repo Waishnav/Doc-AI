@@ -17,22 +17,21 @@ exports.init = (server) => {
       const document = async (documentId) => {
         if (documentId == null) return
         const document = await docController.getDocumentByUUID(documentId)
+        console.log(document)
         if (document) return document
-        const content = {
-          title: "Untitled",
-          content: "",
-        }
-        return await docController.createDocument(documentId, content) ;
+        return await docController.createDocument(documentId, document) ;
       }
 
       server.join(documentId)
       server.emit("load-document", document.data)
 
-      server.on("send-changes", delta => { server.broadcast.to(documentId).emit("receive-changes", delta)
+      server.on("send-changes", delta => { 
+        server.broadcast.to(documentId).emit("receive-changes", delta)
       })
 
-      server.on("save-document", async data => {
+      server.on("save-changes", async data => {
         await docController.updateDocument(documentId, data) ;
+        server.broadcast.to(documentId).emit("send-changes", data)
       })
 
       server.on("update-title", async ({docID, newTitle}) => {

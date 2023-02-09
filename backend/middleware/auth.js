@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-exports.isLoggedIn = async (req, res, next) => {
+exports.verifyJWT = async (req, res, next) => {
     try {
         let token = req.header("Authorization");
         if (!token) {
@@ -11,14 +11,10 @@ exports.isLoggedIn = async (req, res, next) => {
 
         }
         const verified = jwt.verify(token, process.env.JWT_SECRET);
-        req.userId = verified.userId;
+        req.userId = verified.id;
         next();
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 }
 
-exports.generateJWT = (user) => {
-  const token = jwt.sign({ id: user._id, email: user.email, name: user.name }, process.env.JWT_SECRET);auth
-  return token
-}

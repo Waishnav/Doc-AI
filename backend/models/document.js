@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 
 const documentSchema = new mongoose.Schema({
-    _id: {
-        type: String,
-        required: true
-    },
+    // _id: {
+    //     type: String,
+    //     required: true
+    // },
     title: {
         type: String,
         required: true
     },
     content: {
         type: String,
-        required: true
+        required: false
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,

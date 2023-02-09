@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const documentsController = require('../controllers/documents');
 const auth = require('../middleware/auth');
 
@@ -12,16 +11,17 @@ const promiseHandler= fn => (req, res, next) => {
 // router.put('/:uuid', documentsController.updateDocument);
 // router.delete('/:uuid', documentsController.deleteDocument);
 
-router.post('/', auth.isLoggedIn, promiseHandler( async (req,res,next) => {
+router.post('/', auth.verifyJWT, promiseHandler( async (req,res,next) => {
     try {
-      const document = await documentsController.createDocument(req.body.userId , req.body)
-      res.status(200).json({ document });
+      const document = await documentsController.createDocument(req.userId)
+      console.log(document)
+      res.status(200).json({ document: document });
     } catch (error) {
-      res.status(500).json({ error });
+      res.status(500).json({ message: 'Error Occurred but document created '});
     }
 }));
 
-router.get('/', auth.isLoggedIn, promiseHandler( async (req,res,nex) => {
+router.get('/', auth.verifyJWT, promiseHandler( async (req,res,nex) => {
     try {
         const documents = await documentsController.getAllDocuments(req.userId);
         res.status(200).json({ documents });
@@ -31,7 +31,7 @@ router.get('/', auth.isLoggedIn, promiseHandler( async (req,res,nex) => {
     }
 }));
 
-router.get('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,next) => {
+router.get('/:uuid', auth.verifyJWT , promiseHandler( async (req,res,next) => {
     try {
         const { uuid } = req.params;
         const document = await documentsController.getDocumentByUUID(uuid);
@@ -44,7 +44,7 @@ router.get('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,next) => {
     }
 }));
 
-router.put('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,nex) => {
+router.put('/:uuid', auth.verifyJWT , promiseHandler( async (req,res,nex) => {
     try {
         const { uuid } = req.params;
         const document = await documentsController.updateDocument(uuid, req.body);
@@ -57,7 +57,7 @@ router.put('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,nex) => {
     }
 }));
 
-router.delete('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,nex) => {
+router.delete('/:uuid', auth.verifyJWT , promiseHandler( async (req,res,nex) => {
     try {
         const { uuid } = req.params;
         const document = await documentsController.deleteDocument(uuid);
@@ -70,5 +70,19 @@ router.delete('/:uuid', auth.isLoggedIn , promiseHandler( async (req,res,nex) =>
     }
 }));
 
+router.get('/isexist/:uuid', auth.verifyJWT, promiseHandler( async (req,res,next) => {
+    try {
+      const { uuid } = req.params;
+      const isExist = await documentsController.isDocumentExist(uuid)
+      res.status(200).json({ 
+        document: {
+          documentID: uuid,
+          isExist: isExist
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: 'Error Occurred finding Document'});
+    }
+}));
 
 module.exports = router;

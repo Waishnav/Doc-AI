@@ -21,7 +21,7 @@ router.post('/register',  async (req, res, next) => {
 router.post('/login',  async (req,res, next) => {
     try {
         const user = await userController.login(req.body);
-        const token = jwt.sign({ email: user.email, name: user.name }, process.env.JWT_SECRET);
+        const token = jwt.sign({ id: user._id, email: user.email, name: user.name }, process.env.JWT_SECRET);
         console.log(token)
         return res.status(200).json({token: token});
     }
