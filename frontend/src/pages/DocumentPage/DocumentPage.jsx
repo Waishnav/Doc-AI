@@ -1,16 +1,32 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { v4 as uuidV4 } from "uuid"
+import { useParams } from 'react-router-dom';
+import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
+// import { Navigate } from 'react-router-dom';
+import api from "../../api"
 
 const DocumentPage = (props) => {
-    const [newId, setNewId] = useState(null);
-    useEffect(() => {
-        setNewId(uuidV4());
-    }, []);
+    const { id } = useParams();
+    const [isDocExist, setIsDocExist] = useState()
+    console.log(id)
+    useEffect(()=>{
+      // if docID exist render the change the state isDocExist to true
+      api.get(`/documents/isexist/${id}`)
+        .then((res) => {
+          // handle success
+          res.data.document.isExist ? setIsDocExist(true) : setIsDocExist(false)
+        })
+        .catch(function (err) {
+          console.log(err);
+        })
+      //   .then(function () {
+      //   // always executed
+      // });
+
+    }, [])
     return (
         <div>
-        { newId && <Navigate to={`/documents/${newId}`} /> }
-        ...
+          {isDocExist ? <DocumentEditor/> : <>Document Doesn't exist in Databases</>}
         </div>
     );
 }

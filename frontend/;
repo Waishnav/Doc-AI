@@ -1,0 +1,21 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import DocumentEditor from '../../components/DocumentEditor/DocumentEditor';
+// import { Navigate } from 'react-router-dom';
+
+
+const DocumentPage = () => {
+    const docID = useParams();
+    const [isDocExist, setIsDocExist] = useState(false)
+    // useEffect(()=>{
+    //   // if docID exist render the change the state isDocExist to true
+    // })
+    return (
+        <div>
+          isDocExist ? <DocumentEditor/> : <>Jiggling</>
+        </div>
+    );
+}
+
+export default DocumentPage;
+

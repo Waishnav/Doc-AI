@@ -15,25 +15,25 @@ function Dashboard() {
           //   userId: user.id,
           // },
         });
-        setDocuments(response.data);
+        setDocuments(response.data.documents);
+        console.log(response.data.documents)
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  });
+  }, []);
 
   const handleCreateNewDocument = async () => {
-    try {
-      // const response = await axios.post("https://localhost:3001/documents/create", {
-      //   userId: user.id,
-      // });
-      navigate("/documents");
-    } catch (error) {
-      console.log(error);
-    }
+      try {
+        const res = await api.post("/documents");
+        console.log(res.data.document)
+        navigate(`/documents/${res.data.document._id}`)
+        
+      } catch (error) {
+        console.log(error);
+      }
   };
-
 
   return (
     <div className="dashboard">
@@ -42,7 +42,7 @@ function Dashboard() {
       <ul>
         {documents.map((document) => (
           <li key={document.id}>
-            <a href={`/document/${document.id}`}>{document.title}</a>
+            <a href={`/documents/${document._id}`}>{document.title}</a>
           </li>
         ))}
       </ul>

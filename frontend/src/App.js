@@ -1,7 +1,7 @@
 import './App.css';
 import Registration from "./pages/Registration/Registration";
 import Login from "./pages/Login/Login"
-import DocumentEditor from "./components/DocumentEditor/DocumentEditor"
+// import DocumentEditor from "./components/DocumentEditor/DocumentEditor"
 import Dashboard from "./pages/Dashboard/Dashboard"
 import Home from "./pages/Home/Home.jsx" 
 import DocumentPage from './pages/DocumentPage/DocumentPage';
@@ -21,8 +21,8 @@ function App() {
         <Route path="/register" element={<Registration />} />
         <Route element={<PrivateRoutes/>}>
           <Route element={<Dashboard/>} path="/dashboard" exact></Route>
-          <Route element={<DocumentEditor/>} path="/documents/:id"></Route>
-          <Route element={<DocumentPage/>} path="/documents" exact></Route>
+          {/* <Route element={<DocumentEditor/>} path="/documents/:id"></Route> */}
+          <Route element={<DocumentPage/>} path="/documents/:id" exact></Route>
         </Route>
         <Route path="/" element={<Home />} />
       </Routes> 

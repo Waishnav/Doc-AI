@@ -25,6 +25,7 @@ const OPTIONS = [
 function DocumentEditor() {
   const [title, setTitle] = useState("Untitled Document");
   const [socket, setSocket] = useState();
+  const [content, setContent] = useState();
   const [quill, setQuill] = useState();
   const { id: docID } = useParams();
   function shareDocument() {
@@ -79,6 +80,13 @@ function DocumentEditor() {
   useEffect(() => {
     if (socket == null) return;
     socket.on("title-updated", (title) => setTitle(title));
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket == null) return;
+    socket.on("save-changes", () => {
+
+    } );
   }, [socket]);
 
   useEffect(() => {
@@ -139,7 +147,7 @@ function DocumentEditor() {
     <div>
       <div id="header">
         <div className="flex">
-          <Link to ="/">
+          <Link to ="/dashboard">
             <img src={Logo} alt="Logo" />
           </Link>
           <input
@@ -156,7 +164,7 @@ function DocumentEditor() {
       <div className="documents">
         <div id="container" ref={wrapperRef}></div>
         <div>
-          <OpenAi></OpenAi>
+          {/* <OpenAi></OpenAi> */}
         </div>
       </div>
     </div>
