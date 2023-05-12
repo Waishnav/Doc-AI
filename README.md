@@ -46,6 +46,10 @@ Backend will be at `http://localhost:3001`
 - tushitshukla03
 - thejaysharma
 
+## Wokrking Demo :
+
+https://github.com/Priyansh61/Doc-AI/assets/96513964/a6ed45c3-a4df-4ce4-8728-c86304f64d8c
+
 
 ## License
 This project is licensed under the MIT License.
@@ -54,5 +58,5 @@ This project is licensed under the MIT License.
 - [Quill.js](https://quilljs.com/) for providing a powerful rich text editor for React
 - [MongoDB](https://www.mongodb.com/) for providing easy-to-use real-time database and authentication services
 
-This project is built as part of [Hackathon_Name] and it is still in development phase and contributions are welcomed.
+This project is built as part of Can You Hack It? Hackathon and it is still in development phase and contributions are welcomed.
 
