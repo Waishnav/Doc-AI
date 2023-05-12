@@ -48,7 +48,6 @@ Backend will be at `http://localhost:3001`
 
 ## Wokrking Demo :
 
-=
 https://github.com/Priyansh61/Doc-AI/assets/96513964/a6ed45c3-a4df-4ce4-8728-c86304f64d8c
 
 
